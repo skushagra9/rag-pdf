@@ -1,0 +1,30 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment
+venv/
+env/
+
+# Ignore environment variables file
+.env
+
+# Ignore FAISS index files (binary files)
+data/vector_index.faiss
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore test results
+tests/__pycache__/
+tests/*.pyc
+
+# Ignore IDE/Editor-specific files
+.vscode/
+.idea/
+*.swp
+
+# Ignore macOS system files
+.DS_Store
