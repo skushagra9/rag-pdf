@@ -1,33 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
-import torch
 import openai
-# Load a local model and tokenizer
-model_name = "gpt2"  # Replace with the model of your choice
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-
-# Generate a response using the local model
-def generate_response_local(context, query):
-    
-    prompt = f"""
-    Below is the context of a document:
-
-    {context}
-
-    Based on the context, answer the following question concisely:
-
-    Question: {query}
-    Answer:
-    """    
-    inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(
-        **inputs,
-        max_length=200,
-        num_return_sequences=1,
-        # temperature=0.7,
-        # top_p=0.9
-    )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 # Generate a response using OpenAI
 def generate_response_openai(context, query):
