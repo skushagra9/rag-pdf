@@ -22,7 +22,7 @@ const PdfUpload = () => {
     try {
       const formData = new FormData();
       formData.append("s3_path", s3Path);
-      await axios.post("http://localhost:8000/upload_pdf", formData, {
+      await axios.post("https://98bb-2405-201-400b-90b8-c4dd-ea75-13cb-3c33.ngrok-free.app/upload_pdf", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage("PDF processed and stored successfully.");
@@ -44,7 +44,7 @@ const PdfUpload = () => {
       formData.append("fileType", pdfFile.type);
 
       const { data } = await axios.post(
-        "http://localhost:8000/generate-presigned-url",
+        "https://98bb-2405-201-400b-90b8-c4dd-ea75-13cb-3c33.ngrok-free.app/generate-presigned-url",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
