@@ -15,7 +15,7 @@ bot.onText(/.*/, async (msg) => {
 
   // Make API call to your server for RAG response
   try {
-    const response = await fetch('http://localhost:3000/query', {
+    const response = await fetch('http://localhost:8000/query', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: userQuery })

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, Form, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
-from modules.llm_model import generate_response_local, generate_response_openai
+from modules.llm_model import generate_response_openai
 from modules.pdf_parser import extract_text_from_pdf
 from modules.embedding_service import EmbeddingService
 from modules.vector_store import VectorStore
