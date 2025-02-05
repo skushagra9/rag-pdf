@@ -1,10 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
-import dotenv from 'dotenv';
+import { API_URL, TELEGRAM_BOT_TOKEN_TELEGRAM_RAG } from '../utils';
 
-dotenv.config();
-const token = process.env.TELEGRAM_BOT_TOKEN;
-
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN_TELEGRAM_RAG, { polling: true });
 
 // Basic message handler
 bot.onText(/.*/, async (msg) => {
@@ -15,7 +12,7 @@ bot.onText(/.*/, async (msg) => {
 
   // Make API call to your server for RAG response
   try {
-    const response = await fetch('https://98bb-2405-201-400b-90b8-c4dd-ea75-13cb-3c33.ngrok-free.app/query', {
+    const response = await fetch(`${API_URL}/query`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: userQuery })

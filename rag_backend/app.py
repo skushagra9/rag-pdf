@@ -90,6 +90,19 @@ async def query_endpoint(request: QueryRequest):
         query = request.query
         logger.info(f"Received query: {query}")  # Log the query        
         # Generate query embedding
+        trivial_queries = [
+            "hello", "hi", "hey", "help", "what can I ask", "who are you", "what do you do",
+            "how are you", "hello there", "hi there", "good morning", "good afternoon",
+            "good evening", "what's up", "sup", "yo", "hola", "bonjour", "greetings",
+            "can you help me", "tell me what you do", "what are you", "who am I talking to",
+            "what can you do", "how can you help me", "what topics can I ask about", "hi bot"
+        ]
+        if query.lower() in trivial_queries:
+            return {
+                "answer": "Hello! You can ask questions about the topics stored in our database. For example, 'What is AI?' or 'Explain blockchain.'"
+            }
+
+
         query_embedding, _ = embedding_service.generate_embeddings(query)
         
         # Search for the top K similar entries
@@ -108,7 +121,7 @@ async def query_endpoint(request: QueryRequest):
         logger.info(f"Generated context: {context}")  # Log context
         # Generate a response using LLM
       
-        answer = generate_response_openai(context, query)
+        # answer = generate_response_openai(context, query)
         print(answer)
         return {"answer": answer.strip()}
     

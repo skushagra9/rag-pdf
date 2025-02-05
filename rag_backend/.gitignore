@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 
+node_modules/
 # Ignore virtual environment
 venv/
 env/
