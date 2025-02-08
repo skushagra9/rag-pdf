@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "rag-tg": "npx tsc && node dist/rag-telegram/index.js",
-    "rag-tg": "npx tsc && node dist/content-advisor/index.js",
     "content-advisor": "npx tsc && node dist/telegram-twitter-management/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
