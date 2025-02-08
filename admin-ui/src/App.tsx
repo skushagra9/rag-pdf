@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { NEXT_PUBLIC_API } from "./utils/consts";
 
 const PdfUpload = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -22,7 +23,7 @@ const PdfUpload = () => {
     try {
       const formData = new FormData();
       formData.append("s3_path", s3Path);
-      await axios.post("https://98bb-2405-201-400b-90b8-c4dd-ea75-13cb-3c33.ngrok-free.app/upload_pdf", formData, {
+      await axios.post(`${NEXT_PUBLIC_API}/upload_pdf`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage("PDF processed and stored successfully.");
@@ -44,7 +45,7 @@ const PdfUpload = () => {
       formData.append("fileType", pdfFile.type);
 
       const { data } = await axios.post(
-        "https://98bb-2405-201-400b-90b8-c4dd-ea75-13cb-3c33.ngrok-free.app/generate-presigned-url",
+        `${NEXT_PUBLIC_API}/generate-presigned-url`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -85,7 +86,6 @@ const PdfUpload = () => {
 
   return (
     <div className="flex flex-col items-center p-6">
-      {/* Dropzone */}
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-md p-6 w-full max-w-lg text-center cursor-pointer transition ${

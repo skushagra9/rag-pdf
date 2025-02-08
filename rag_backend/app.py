@@ -121,7 +121,7 @@ async def query_endpoint(request: QueryRequest):
         logger.info(f"Generated context: {context}")  # Log context
         # Generate a response using LLM
       
-        # answer = generate_response_openai(context, query)
+        answer = generate_response_openai(context, query)
         print(answer)
         return {"answer": answer.strip()}
     

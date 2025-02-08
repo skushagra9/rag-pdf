@@ -7,7 +7,7 @@ const ollama = new Ollama({ host: 'http://127.0.0.1:11434' })
 export async function generateTweetDraft(idea: string): Promise<string> {
   try {
     const response = await ollama.chat({
-      model: 'llama3.2:1b',
+      model: 'llama3.2:latest',
       messages: [
         {
           role: 'system',

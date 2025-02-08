@@ -1,6 +1,6 @@
 import faiss
 import os
-import pickle  # For saving and loading sentences
+import pickle
 
 class VectorStore:
     def __init__(self, dimension, index_file):
