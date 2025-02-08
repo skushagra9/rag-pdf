@@ -12,6 +12,8 @@ A **Telegram bot** that allows users to **draft, edit, approve, and post tweets*
 ## Demo Video
 
 
+https://github.com/user-attachments/assets/7cc2784d-5315-46e9-9c62-c215b9babc86
+
 
 ## Commands & Usage
 
