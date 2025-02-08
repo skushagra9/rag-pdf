@@ -8,17 +8,33 @@ The PdfUpload component allows users to upload a PDF file, store it in AWS S3, a
 
 ### 🔹 Features:
 
-    1. Drag & Drop Support (via react-dropzone)
-    2. Pre-signed URL Upload to S3
-    3. Server Processing Trigger after upload
-    4. Real-time Status Updates
+  - Drag & Drop Support (via react-dropzone)
+  - Pre-signed URL Upload to S3
+  - Server Processing Trigger after upload
+  - Real-time Status Updates
+
+### Setup Project
+
+
+```sh
+git clone https://github.com/skushagra9/rag-pdf
+cd admin-ui
+npm install 
+cp .env.example .env
+```
+
+Fill in the server url, by default which is running on port 8000
+
+```sh 
+npm run dev
+```
 
 ### 🔹 Flow:
 
-    1. User uploads a PDF (drag & drop or browse).
-    2. Generates a pre-signed URL from the server.
-    3. Uploads PDF to S3 using axios.put().
-    4. Triggers processing via an API request.
-    5. Displays upload & processing status.
+  - User uploads a PDF (drag & drop or browse).
+  - Generates a pre-signed URL from the server.
+  - Uploads PDF to S3 using axios.put().
+  - Triggers processing via an API request.
+  - Displays upload & processing status.
 
 This ensures secure, efficient, and interactive file uploads. 🚀
