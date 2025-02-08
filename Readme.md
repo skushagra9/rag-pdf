@@ -46,7 +46,7 @@ ollama pull llama3.2:1b
 
 # Run the model
 ollama run llama3.2:1b
-
+```
 🔗 **[Admin UI Installation Guide](https://github.com/skushagra9/rag-pdf/blob/master/admin-ui/README.md)**  
 🔗 **[Telegram Stack Installation Guide](https://github.com/skushagra9/rag-pdf/tree/master/telegram-stack/Readme.md)**  
 🔗 **[Python Backend Installation Guide](https://github.com/skushagra9/rag-pdf/blob/master/rag_backend/Readme.md)**  
