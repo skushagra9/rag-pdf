@@ -13,5 +13,4 @@ def generate_response_llm(context, query):
         )
     
     answer = response.message.content
-    print(answer)
     return answer

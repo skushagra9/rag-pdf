@@ -41,8 +41,11 @@ export async function generateTweetDraft(idea: string): Promise<string> {
         }
       ],
     });
-    
     const draft = response.message.content
+    if (!response || !response.message || !response.message.content) {
+      console.error("Invalid response structure from Ollama:", response);
+      return `No draft generated for idea: ${idea}`;
+    }
     return draft || `No draft generated for idea: ${idea}`;
   } catch (error) {
     console.error('OpenAI error:', error);

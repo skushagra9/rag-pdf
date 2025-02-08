@@ -12,7 +12,7 @@ bot.onText(/.*/, async (msg) => {
 
   // Make API call to your server for RAG response
   try {
-    const response = await fetch(`${API_URL}/query`, {
+    const response = await fetch(`${API_URL}/search/query`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: userQuery })
