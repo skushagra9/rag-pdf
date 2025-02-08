@@ -1,10 +1,11 @@
 import io
 import boto3
 from fastapi import HTTPException
+from pinecone import Pinecone, ServerlessSpec
 import yaml
+from modules import embedding_service
 from classes.request_classes import PreSignedUrlRequest, UploadRequest
-from modules import embedding_service, vector_store
-from config.config import AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME
+from config.config import AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SECRET_ACCESS_KEY, PINECONE_API_KEY, PINECONE_DIMENSIONS, PINECONE_ENVIORNMENT, PINECONE_INDEX_NAME, S3_BUCKET_NAME
 from services.pdf_parser import extract_text_from_pdf
 from botocore.exceptions import NoCredentialsError
 from fastapi import APIRouter
@@ -19,15 +20,8 @@ with open("config/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 embedding_service = embedding_service.EmbeddingService(config['embedding_model'])
-vector_store = vector_store.VectorStore(dimension=384, index_file=config['faiss']['index_file'])
-
-try:
-    vector_store.load()
-    print("Vector store loaded successfully.")
-    print(f"Number of stored sentences: {len(vector_store.sentences)}")
-except FileNotFoundError:
-    print("No saved vector store found. Starting with an empty vector store.")
-
+pc = Pinecone(api_key=PINECONE_API_KEY)
+vector_store = pc.Index(PINECONE_INDEX_NAME)
 router = APIRouter(prefix="/s3", tags=["S3-Configuration"])
 
 @router.post("/generate-presigned-url/")
@@ -64,11 +58,13 @@ async def upload_pdf(uploadrequest: UploadRequest):
         pdf_file = io.BytesIO(pdf_stream)
         text = extract_text_from_pdf(pdf_file)
 
-        embeddings, sentences = embedding_service.generate_embeddings(text)
-        vector_store.add_embeddings(embeddings, sentences=sentences)
 
-        # Save the vector store to disk
-        vector_store.save()
+        embeddings, sentences = embedding_service.generate_embeddings(text)
+        vectors_to_upsert = [
+            (f"{uploadrequest.s3_path}-{i}", embeddings[i].tolist(), {"sentence": sentences[i]})
+            for i in range(len(embeddings))
+            ]
+        vector_store.upsert(vectors=vectors_to_upsert)
 
         return {"message": "PDF processed and stored successfully."}
     except NoCredentialsError:

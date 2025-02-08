@@ -1,7 +1,9 @@
 from fastapi import HTTPException
+from pinecone import Pinecone, ServerlessSpec
 import yaml
 from classes.request_classes import QueryRequest
-from modules import embedding_service, vector_store
+from modules import embedding_service
+from config.config import PINECONE_API_KEY, PINECONE_INDEX_NAME
 from services.llm_response import generate_response_llm
 from fastapi import APIRouter
 
@@ -10,15 +12,8 @@ with open("config/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 embedding_service = embedding_service.EmbeddingService(config['embedding_model'])
-vector_store = vector_store.VectorStore(dimension=384, index_file=config['faiss']['index_file'])
-
-try:
-    vector_store.load()
-    print("Vector store loaded successfully.")
-    print(f"Number of stored sentences: {len(vector_store.sentences)}")
-except FileNotFoundError:
-    print("No saved vector store found. Starting with an empty vector store.")
-
+pc = Pinecone(api_key=PINECONE_API_KEY)
+vector_store = pc.Index(PINECONE_INDEX_NAME)
 
 router = APIRouter(prefix="/search", tags=["Vector-Search"])
 
@@ -39,25 +34,35 @@ async def query_endpoint(request: QueryRequest):
         ]
         if query.lower() in trivial_queries:
             return {
-                "answer": "Hello! You can ask questions about the topics stored in our database. For example, 'What is AI?' or 'Explain blockchain.'"
+                "answer": "Hello! You can ask questions about the topics stored in our database from the admin-dashboard"
             }
 
 
-        query_embedding, _ = embedding_service.generate_embeddings(query)
+        # query_embedding = embedding_service.encode([query])  # Embedding the query
+        # search_results = index.query(queries=query_embedding, top_k=5)
         
-        distances, indices = vector_store.search(query_embedding, config['faiss']['top_k'])
-        print(f"Indices: {indices}")  # Log context
+        # # Assuming search results are the most relevant documents
+        # retrieved_docs = [res['metadata']['text'] for res in search_results['results'][0]['matches']]
+        
+        # # Generate response from the retrieved documents (you could use a language model here)
+        # response = f"Here are the top results: {retrieved_docs}"
+        # answer = generate_response_llm(response, query)
+        
+        query_embedding = embedding_service.generate_embeddings(query)[0]  # Extract first result
 
+        search_results = vector_store.query(
+            vector=query_embedding.tolist(),  # Convert to list
+            top_k=5,
+            include_metadata=True  # Ensure metadata is included in results
+        )
 
-        if not indices.size or (indices[0] < 0).all():
-            raise HTTPException(status_code=404, detail="No relevant results found for the query.")
-
-        indices = indices[0].tolist()
-
-        context = "\n".join([vector_store.sentences[i] for i in indices])
-        print(f"Generated context: {context}")  # Log context
-      
-        answer = generate_response_llm(context, query)
+        retrieved_sentences = [match["metadata"]["sentence"] for match in search_results["matches"]]
+        print(retrieved_sentences)
+        if not retrieved_sentences:
+            return {"answer": "I'm sorry, but I couldn't find relevant information in the database."}
+        formatted_context = "\n".join(retrieved_sentences)
+        print("hello", formatted_context)
+        answer = generate_response_llm(formatted_context, query)
         print(answer)
         return {"answer": answer.strip()}
     

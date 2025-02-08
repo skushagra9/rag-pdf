@@ -8,5 +8,3 @@ class EmbeddingService:
         sentences = text.split('\n')
         embeddings = self.model.encode(sentences)
         return embeddings, sentences
-
-#approach
