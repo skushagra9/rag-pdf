@@ -125,3 +125,5 @@ Implement a task queue (Celery/Redis) to handle PDF processing asynchronously. T
 ### Outcome  
 - Faster response times  
 - Better system stability  
+
+## 4. Dockerizing the python-services and splitting into micro-architecture to deploy to kubernetes
