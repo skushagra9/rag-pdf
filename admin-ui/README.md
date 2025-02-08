@@ -2,16 +2,6 @@
 
 ![alt text](image.png)
 
-## Features
-
-The PdfUpload component allows users to upload a PDF file, store it in AWS S3, and trigger server-side processing.
-
-### 🔹 Features:
-
-  - Drag & Drop Support (via react-dropzone)
-  - Pre-signed URL Upload to S3
-  - Server Processing Trigger after upload
-  - Real-time Status Updates
 
 ### Setup Project
 
@@ -22,6 +12,18 @@ cd admin-ui
 npm install 
 cp .env.example .env
 ```
+
+
+## Features
+
+The PdfUpload component allows users to upload a PDF file, store it in AWS S3, and trigger server-side processing.
+
+### 🔹 Features:
+
+  - Drag & Drop Support (via react-dropzone)
+  - Pre-signed URL Upload to S3
+  - Server Processing Trigger after upload
+  - Real-time Status Updates
 
 Fill in the server url, by default which is running on port 8000
 

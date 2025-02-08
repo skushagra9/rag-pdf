@@ -1,6 +1,18 @@
 
 # Telegram Twitter Bots
 
+**Installation Steps:**
+```sh
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh  
+
+# Pull the Llama model
+ollama pull llama3.2:1b
+
+# Run the model
+ollama run llama3.2:1b
+```
+
 ```sh
 git clone https://github.com/skushagra9/rag-pdf
 cd telegram-stack

@@ -1,6 +1,16 @@
 # Python Rag Backend System
 
 ## Setup
+```sh
+# Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh  
+
+# Pull the Llama model
+ollama pull llama3.2:1b
+
+# Run the model
+ollama run llama3.2:1b
+```
 
 ```sh
 git clone https://github.com/skushagra9/rag-pdf
@@ -66,3 +76,52 @@ uvicorn app:app --reload
 - **Custom Modules**:
   - `embedding_service` → Embedding generation.
   - `llm_response` → LLM response generation.
+
+## IMPROVEMENTS and Enhancements
+
+## 1. Storing Knowledge Segments Efficiently  
+
+### Why?  
+Large documents need to be fragmented properly to enable better retrieval.
+
+### Solution  
+- Store knowledge segments efficiently.  
+- Further fragment them and create embeddings using **HNSW (Hierarchical Navigable Small World)** indexing for optimized similarity search.  
+- Select **top N** matches and link them back to the original knowledge segment.  
+- Use only **unique matched segments** to avoid redundant information.  
+
+### Outcome  
+- Improved retrieval speed  
+- Better accuracy  
+- Optimized storage  
+
+
+---
+
+## 2. Using DeepEval to Evaluate Metrics
+
+### Why?  
+Ensuring the quality and accuracy of retrieved knowledge is crucial.
+
+### Solution  
+Implement **DeepEval** to evaluate RAG pipeline metrics such as:  
+- Retrieval accuracy  
+- Relevancy  
+- Answer correctness  
+
+### Outcome  
+- Continuous evaluation and benchmarking to improve retrieval quality.  
+
+---
+
+## 3. Adding Task Queue for PDF Processing
+
+### Why?  
+Processing large PDFs synchronously can block the system and slow down performance.
+
+### Solution  
+Implement a task queue (Celery/Redis) to handle PDF processing asynchronously. This ensures that large documents are processed in the background without affecting system responsiveness.
+
+### Outcome  
+- Faster response times  
+- Better system stability  
