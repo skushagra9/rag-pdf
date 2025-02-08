@@ -8,7 +8,7 @@ def generate_response_llm(context, query):
     ]
 
     response = client.chat(
-        model="llama3.2:latest",
+        model="llama3.2:1b",
         messages=messages
         )
     

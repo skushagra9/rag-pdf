@@ -3,3 +3,4 @@ embedding_model: "all-MiniLM-L6-v2"
 faiss:
   index_file: "data/vector_index.faiss"
   top_k: 5
+ 
