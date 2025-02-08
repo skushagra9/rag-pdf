@@ -40,7 +40,7 @@ bot.onText(/\/tweet (.+)/, async (msg: Message, match: RegExpExecArray | null) =
   pendingTweets[chatId].push({ id: tweetId, text: draft });
   await bot.sendMessage(
     chatId,
-    `**Proposed Tweet Draft:**\n\n${draft}\n\nUse /approve to post, or /edit <text> to modify.`,
+    `**Proposed Tweet Draft:**\n\n${draft}\n\nUse /list to list all the tweets.`,
     { parse_mode: 'Markdown' }
   );
 });

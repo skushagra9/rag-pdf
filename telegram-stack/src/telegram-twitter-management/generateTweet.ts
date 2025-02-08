@@ -1,50 +1,48 @@
-import OpenAI from "openai";
-import { OPENAI_API_KEY } from "../utils";
+import {Ollama} from "ollama";
 
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY
-})
+const ollama = new Ollama({ host: 'http://127.0.0.1:11434' })
+
 
 
 export async function generateTweetDraft(idea: string): Promise<string> {
   try {
-    // Using ChatCompletion with GPT-3.5-turbo, but you can switch models or prompt style
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+    const response = await ollama.chat({
+      model: 'llama3.2:1b',
       messages: [
         {
           role: 'system',
           content: `
-            You are an expert social media strategist with a deep understanding of Twitter engagement tactics. 
-            Your task is to craft highly engaging, viral-ready tweets that spark discussions, get retweets, and encourage interaction.
+            You are a highly skilled social media strategist with an innate understanding of what makes tweets go viral. Your goal is to craft tweets that not only spark engagement but also have the potential to trend. You have mastered Twitter's algorithm and know exactly how to:
+            - **Engage followers**: Create content that drives replies, retweets, likes, and shares.
+            - **Leverage viral elements**: Incorporate trends, humor, relatable content, or a controversial stance (without being offensive).
+            - **Maximize visibility**: Use hashtags, mentions, and trending topics to expand reach.
+            - **Optimize for 280 characters**: Every word should have purpose—no filler, no fluff.
+            - **Craft for personality**: Whether witty, insightful, or thought-provoking, the tweet must feel human and authentic.
+            - **Keep urgency when appropriate**: If the topic is news-related, make it timely and eye-catching.
+            - **Include a clear call to action (CTA)**: Prompt followers to engage, share, or comment.
     
-            **Guidelines:**
-            - The tweet **must fit within 280 characters**.
-            - Use a **conversational, witty, or thought-provoking tone** depending on the topic.
-            - **Maximize engagement** by making it catchy, relatable, or controversial (but not offensive).
-            - Use relevant **hashtags** to reach a broader audience.
-            - If applicable, mention important **Twitter handles (@usernames)** or trending topics.
-            - If humor is relevant, **inject a bit of wit** or a **bold statement** to grab attention.
-            - Avoid filler words—**every character should add value**.
-            - If the topic is news-related, **make it urgent and attention-grabbing**.
-            - **No forced AI-like phrasing**—make it feel **authentic** and **human-written**.
+            **Additional Guidelines**:
+            - The tweet should **spark conversation** and encourage discussions.
+            - Infuse humor when possible, but don’t sacrifice clarity.
+            - Stay away from AI-like phrasing—make it sound like a real person, not a bot.
+            - **Make it memorable** and something people would want to share with their own followers.
+    
+            Your task is to take the given topic and create a **viral-ready tweet** that follows all of these principles.
           `,
         },
         {
           role: 'user',
           content: `
-            Create a viral and highly engaging tweet about the following topic:
+            Create a tweet that has the potential to go viral, based on this idea:
             "${idea}"
-            
-            The tweet should be concise, intriguing, and formatted to **maximize engagement**.
+    
+            The tweet should be intriguing, concise, and highly engaging, designed to encourage retweets, replies, and likes.
           `,
         }
       ],
-      max_tokens: 60,
-      temperature: 0.7,
     });
-
-    const draft = response.choices[0].message.content
+    
+    const draft = response.message.content
     return draft || `No draft generated for idea: ${idea}`;
   } catch (error) {
     console.error('OpenAI error:', error);
