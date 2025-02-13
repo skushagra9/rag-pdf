@@ -4,8 +4,7 @@
 
 Superteam Vietnam currently relies on **manual effort** to manage its communication channels like **Telegram and Twitter**. This project aims to develop an **AI-driven solution** to **automate, enhance, and streamline** content creation, management, and community interactions. 
 
-This **MVP solution** lays the **foundation for a fully-fledged AI system**. The winner of this bounty will have a strong chance of securing a contract to **build the complete solution**.
-
+This **MVP solution** lays the **foundation for a fully-fledged AI system**. 
 ---
 
 ## ✅ How This RAG System Addresses the Requirements
