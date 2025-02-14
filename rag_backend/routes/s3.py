@@ -72,3 +72,23 @@ async def upload_pdf(uploadrequest: UploadRequest):
     except Exception as e:
         print("Failed here", e)
         raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+
+
+@router.get("/uploaded")
+async def upload_pdf():
+    """Fetch the uploaded PDF from S3 and process it in-memory."""
+    try:
+        # Get the file from S3 as a stream
+        response = s3_client.list_objects_v2(Bucket=S3_BUCKET_NAME, Prefix="pdfs/")
+        print(response)
+
+        if 'Contents' in response:
+            object_names = [obj['Key'] for obj in response['Contents']]
+            return {"files": object_names}
+        else:
+            return {"message": "No files found in the folder"}
+
+    except NoCredentialsError:
+        return {"error": "Credentials not found"}
+    except Exception as e:
+        return {"error": str(e)}

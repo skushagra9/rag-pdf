@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { NEXT_PUBLIC_API } from "./utils/consts";
 
@@ -7,6 +7,7 @@ const PdfUpload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [uploadedData, setUploadedData] = useState([]);
 
   const uploadToS3 = async (pdfFile: File, presignedUrl: string) => {
     try {
@@ -22,13 +23,24 @@ const PdfUpload = () => {
   const processFile = async (s3Path: string) => {
     try {
       await axios.post(`${NEXT_PUBLIC_API}/s3/upload_pdf`, {
-        "s3_path": s3Path
+        s3_path: s3Path,
       });
       setMessage("PDF processed and stored successfully.");
     } catch (error) {
       console.log(error);
 
       throw new Error("Failed to process the PDF on the server.");
+    }finally{
+      getAllFiles();
+    }
+  };
+
+  const getAllFiles = async () => {
+    try {
+      const { data } = await axios.get(`${NEXT_PUBLIC_API}/s3/uploaded`);
+      setUploadedData(data.files);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -37,13 +49,12 @@ const PdfUpload = () => {
     setMessage(null);
 
     try {
-
       const { data } = await axios.post(
         `${NEXT_PUBLIC_API}/s3/generate-presigned-url`,
         {
-          "fileName": pdfFile.name,
-          "fileType": pdfFile.type
-        },
+          fileName: pdfFile.name,
+          fileType: pdfFile.type,
+        }
       );
 
       const { url } = data;
@@ -61,7 +72,9 @@ const PdfUpload = () => {
   };
 
   const onDrop = (acceptedFiles: File[]) => {
-    const pdfFile = acceptedFiles.find((file) => file.type === "application/pdf");
+    const pdfFile = acceptedFiles.find(
+      (file) => file.type === "application/pdf"
+    );
     if (!pdfFile) {
       setMessage("Only PDF files are allowed!");
       return;
@@ -74,12 +87,17 @@ const PdfUpload = () => {
     multiple: false,
   });
 
+  useEffect(() => {
+    getAllFiles();
+  }, []);
+
   return (
     <div className="flex flex-col items-center p-6">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-md p-6 w-full max-w-lg text-center cursor-pointer transition ${isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-300"
-          }`}
+        className={`border-2 border-dashed rounded-md p-6 w-full max-w-lg text-center cursor-pointer transition ${
+          isDragActive ? "border-blue-500 bg-blue-100" : "border-gray-300"
+        }`}
       >
         <input {...getInputProps()} />
         {isLoading ? (
@@ -104,14 +122,26 @@ const PdfUpload = () => {
       {/* Status message */}
       {message && (
         <div
-          className={`mt-4 w-full max-w-lg text-center p-3 rounded-md ${message.includes("success")
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-700"
-            }`}
+          className={`mt-4 w-full max-w-lg text-center p-3 rounded-md ${
+            message.includes("success")
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
         >
           {message}
+          
         </div>
       )}
+      {uploadedData.length > 0 && (
+            <div className="mt-2 text-sm">
+              <p>Uploaded files:</p>
+              <ul>
+                {uploadedData.map((fileName) => (
+                  <li key={fileName}>{fileName}</li>
+                ))}
+              </ul>
+            </div>
+          )}
     </div>
   );
 };
